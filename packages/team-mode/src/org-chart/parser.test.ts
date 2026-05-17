@@ -17,8 +17,8 @@ describe('parseOrgChart', () => {
     expect(result.value.version).toBe(1);
     expect(result.value.name).toBe('Forge In-House Team');
     expect(result.value.cto).toBe('shashank');
-    expect(result.value.roles).toHaveLength(3);
-    expect(result.value.policies).toHaveLength(2);
+    expect(result.value.roles).toHaveLength(16);
+    expect(result.value.policies).toHaveLength(3);
   });
 
   it('should validate role fields correctly', async () => {

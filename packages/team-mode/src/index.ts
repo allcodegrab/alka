@@ -3,3 +3,8 @@ export * from './org-chart/index.js';
 export * from './inbox/index.js';
 export * from './ledger/index.js';
 export * from './memory/index.js';
+export * from './verification/index.js';
+export * from './orchestrator/index.js';
+export * from './standup/index.js';
+export * from './team-mods/index.js';
+export * from './buddy/index.js';

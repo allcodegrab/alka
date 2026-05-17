@@ -3,6 +3,7 @@ name: Forge In-House Team
 cto: shashank
 
 roles:
+  # === LEADERSHIP ===
   - id: vp-engineering
     title: VP Engineering
     tier: leadership
@@ -15,6 +16,7 @@ roles:
     color: blue
     mustEscalate: [mission_brief, architecture_change, schema_change, public_api_change, production_push, scope_expansion]
 
+  # === PLANNING TIER ===
   - id: architect
     title: Architect
     tier: planning
@@ -25,7 +27,31 @@ roles:
     isolation: none
     maxTurns: 30
     color: purple
+    produces: [architecture.md, adrs/]
 
+  - id: data-engineer
+    title: Data Engineer
+    tier: planning
+    reportsTo: vp-engineering
+    model: claude-opus-4-7
+    tools: [Read, Grep, Glob, Bash]
+    skills: [research-first, plan-then-execute, production-readiness, right-sized-engineering, unbiased-development]
+    isolation: none
+    maxTurns: 30
+    color: cyan
+
+  - id: researcher
+    title: Researcher
+    tier: planning
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Grep, Glob, WebSearch, WebFetch]
+    skills: [research-first, unbiased-development]
+    isolation: none
+    maxTurns: 40
+    color: green
+
+  # === BUILD TIER ===
   - id: impl-a
     title: Implementer A
     tier: build
@@ -37,10 +63,137 @@ roles:
     maxTurns: 60
     color: orange
 
+  - id: impl-b
+    title: Implementer B
+    tier: build
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Edit, Write, Bash, Grep, Glob]
+    skills: [engineering-excellence, surgical-edits, testing-discipline, version-control-craft, unbiased-development]
+    isolation: worktree
+    maxTurns: 60
+    color: orange
+
+  - id: impl-c
+    title: Implementer C
+    tier: build
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Edit, Write, Bash, Grep, Glob]
+    skills: [engineering-excellence, surgical-edits, testing-discipline, version-control-craft, unbiased-development]
+    isolation: worktree
+    maxTurns: 60
+    color: orange
+
+  - id: impl-d
+    title: Implementer D
+    tier: build
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Edit, Write, Bash, Grep, Glob]
+    skills: [engineering-excellence, surgical-edits, testing-discipline, version-control-craft, unbiased-development]
+    isolation: worktree
+    maxTurns: 60
+    color: orange
+
+  - id: stylist
+    title: Stylist
+    tier: build
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Edit, Write, Bash, Grep, Glob]
+    skills: [surgical-edits, testing-discipline, documentation-discipline, version-control-craft, unbiased-development]
+    isolation: worktree
+    maxTurns: 40
+    color: pink
+
+  # === VERIFY TIER ===
+  - id: tests-verifier
+    title: Tests Verifier
+    tier: verify
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Grep, Glob, Bash]
+    skills: [testing-discipline, verify-rigorously, unbiased-development]
+    isolation: none
+    maxTurns: 20
+    color: yellow
+
+  - id: security-verifier
+    title: Security Verifier
+    tier: verify
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Grep, Glob]
+    skills: [production-readiness, unbiased-development, repo-safety-net]
+    isolation: none
+    maxTurns: 20
+    color: red
+
+  - id: performance-verifier
+    title: Performance Verifier
+    tier: verify
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Grep, Glob, Bash]
+    skills: [production-readiness, unbiased-development]
+    isolation: none
+    maxTurns: 20
+    color: red
+
+  - id: reliability-verifier
+    title: Reliability Verifier
+    tier: verify
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Grep, Glob]
+    skills: [production-readiness, unbiased-development]
+    isolation: none
+    maxTurns: 20
+    color: red
+
+  # === RELEASE TIER ===
+  - id: release-manager
+    title: Release Manager
+    tier: release
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Edit, Write, Bash, Grep, Glob]
+    skills: [version-control-craft, documentation-discipline, production-readiness, unbiased-development]
+    isolation: none
+    maxTurns: 30
+    color: gold
+
+  - id: docs-author
+    title: Docs Author
+    tier: release
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Edit, Write, Grep, Glob, WebFetch]
+    skills: [documentation-discipline, unbiased-development, right-sized-engineering]
+    isolation: none
+    maxTurns: 25
+    color: teal
+
+  - id: pr-reviewer
+    title: PR Reviewer
+    tier: verify
+    reportsTo: vp-engineering
+    model: claude-sonnet-4-6
+    tools: [Read, Grep, Glob]
+    skills: [critical-self-review, unbiased-development, production-readiness]
+    isolation: none
+    maxTurns: 25
+    color: white
+
 policies:
+  - id: implementation-must-be-worktree
+    appliesTo: ["impl-*", "stylist"]
+    rule: "isolation: worktree"
+
   - id: verifier-must-be-read-only
     appliesTo: ["*-verifier", "pr-reviewer"]
-    rule: "disallowedTools: [Edit, Write, Bash]"
+    rule: "disallowedTools: [Edit, Write]"
 
   - id: pr-review-uses-gemini
     appliesTo: [pr-reviewer]

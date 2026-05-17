@@ -30,7 +30,7 @@ describe('detectDrift', () => {
     if (!result.ok) return;
 
     expect(result.value.inSync).toBe(false);
-    expect(result.value.missing).toHaveLength(3);
+    expect(result.value.missing).toHaveLength(16);
     expect(result.value.missing).toContain('vp-engineering');
     expect(result.value.extra).toHaveLength(0);
     expect(result.value.modified).toHaveLength(0);

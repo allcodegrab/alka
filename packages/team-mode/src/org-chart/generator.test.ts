@@ -28,7 +28,7 @@ describe('generateAgentFiles', () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
-    expect(result.value).toHaveLength(3);
+    expect(result.value).toHaveLength(16);
     expect(result.value).toContain(join(tmpDir, '.claude', 'agents', 'vp-engineering.md'));
     expect(result.value).toContain(join(tmpDir, '.claude', 'agents', 'architect.md'));
     expect(result.value).toContain(join(tmpDir, '.claude', 'agents', 'impl-a.md'));
