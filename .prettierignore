@@ -1,0 +1,9 @@
+codeoss/
+node_modules/
+dist/
+out/
+out-build/
+coverage/
+.turbo/
+pnpm-lock.yaml
+*.md
