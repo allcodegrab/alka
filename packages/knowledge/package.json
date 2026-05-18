@@ -1,10 +1,15 @@
 {
-  "name": "@forge/cli",
+  "name": "@forge/knowledge",
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "bin": {
-    "forge": "dist/main.js"
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsc",
@@ -17,12 +22,6 @@
   },
   "dependencies": {
     "@forge/protocol": "workspace:*",
-    "@forge/team-mode": "workspace:*",
-    "@forge/agent-runtime": "workspace:*",
-    "@forge/skill-loader": "workspace:*",
-    "@forge/knowledge": "workspace:*",
-    "commander": "13.1.0",
-    "pino": "9.6.0",
-    "pino-pretty": "13.0.0"
+    "lunr": "2.3.9"
   }
 }

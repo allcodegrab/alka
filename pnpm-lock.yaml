@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@types/lunr':
+        specifier: ^2.3.7
+        version: 2.3.7
       '@types/node':
         specifier: ^25.8.0
         version: 25.8.0
@@ -47,6 +50,9 @@ importers:
       '@forge/agent-runtime':
         specifier: workspace:*
         version: link:../agent-runtime
+      '@forge/knowledge':
+        specifier: workspace:*
+        version: link:../knowledge
       '@forge/protocol':
         specifier: workspace:*
         version: link:../forge-protocol
@@ -71,6 +77,15 @@ importers:
       zod:
         specifier: 3.25.11
         version: 3.25.11
+
+  packages/knowledge:
+    dependencies:
+      '@forge/protocol':
+        specifier: workspace:*
+        version: link:../forge-protocol
+      lunr:
+        specifier: 2.3.9
+        version: 2.3.9
 
   packages/skill-loader:
     dependencies:
@@ -489,6 +504,9 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
+  '@types/lunr@2.3.7':
+    resolution: {integrity: sha512-Tb/kUm38e8gmjahQzdCKhbdsvQ9/ppzHFfsJ0dMs3ckqQsRj+P5IkSAwFTBrBxdyr3E/LoMUUrZngjDYAjiE3A==}
+
   '@types/node@25.8.0':
     resolution: {integrity: sha512-TCFSk8IZh+iLX1xtksoBVtdmgL+1IX0fC9BeU4QqFSuNdN/K+HUlhqOzEmSYYpZUVsLYcPqc9KX+60iDuninSQ==}
 
@@ -850,6 +868,9 @@ packages:
 
   loupe@3.2.1:
     resolution: {integrity: sha512-CdzqowRJCeLU72bHvWqwRBBlLcMEtIvGrlvef74kMnV2AolS9Y8xUv1I0U/MNAWMhBlKIoyuEgoJ0t/bbwHbLQ==}
+
+  lunr@2.3.9:
+    resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -1412,6 +1433,8 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
+  '@types/lunr@2.3.7': {}
+
   '@types/node@25.8.0':
     dependencies:
       undici-types: 7.24.6
@@ -1817,6 +1840,8 @@ snapshots:
       p-locate: 5.0.0
 
   loupe@3.2.1: {}
+
+  lunr@2.3.9: {}
 
   magic-string@0.30.21:
     dependencies:
