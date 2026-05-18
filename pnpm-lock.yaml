@@ -45,6 +45,20 @@ importers:
         specifier: 3.25.11
         version: 3.25.11
 
+  packages/anvil: {}
+
+  packages/dashboard:
+    dependencies:
+      '@forge/anvil':
+        specifier: workspace:*
+        version: link:../anvil
+      '@forge/protocol':
+        specifier: workspace:*
+        version: link:../forge-protocol
+      '@forge/team-mode':
+        specifier: workspace:*
+        version: link:../team-mode
+
   packages/forge-cli:
     dependencies:
       '@forge/agent-runtime':
@@ -86,6 +100,12 @@ importers:
       lunr:
         specifier: 2.3.9
         version: 2.3.9
+
+  packages/llm-router:
+    dependencies:
+      '@forge/protocol':
+        specifier: workspace:*
+        version: link:../forge-protocol
 
   packages/skill-loader:
     dependencies:

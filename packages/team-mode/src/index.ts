@@ -8,3 +8,7 @@ export * from './orchestrator/index.js';
 export * from './standup/index.js';
 export * from './team-mods/index.js';
 export * from './buddy/index.js';
+export * from './sprint/index.js';
+export * from './integrations/github/index.js';
+export * from './integrations/jira/index.js';
+export * from './integrations/gemini/index.js';

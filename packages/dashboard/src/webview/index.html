@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forge Dashboard</title>
+<style>
+:root {
+  --surface-canvas: #0A0B0D;
+  --surface-base: #0E1014;
+  --surface-raised: #14171C;
+  --surface-overlay: #1A1E25;
+  --surface-sunken: #07080A;
+  --border-subtle: #1A1E25;
+  --border-default: #262B33;
+  --border-strong: #3A4049;
+  --text-primary: #E8EAED;
+  --text-secondary: #9CA3AF;
+  --text-tertiary: #6B7280;
+  --text-disabled: #4A5057;
+  --accent: #FF5C1F;
+  --accent-hover: #FF7A45;
+  --accent-muted: rgba(255, 92, 31, 0.12);
+  --accent-on: #0A0B0D;
+  --success: #2EBD6F;
+  --success-muted: rgba(46, 189, 111, 0.12);
+  --warning: #E0A93B;
+  --warning-muted: rgba(224, 169, 59, 0.12);
+  --danger: #E5484D;
+  --danger-muted: rgba(229, 72, 77, 0.12);
+  --info: #4C8DFF;
+  --info-muted: rgba(76, 141, 255, 0.12);
+  --font-sans: 'Satoshi', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.38;
+  color: var(--text-primary);
+  background: var(--surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  overflow-y: auto;
+  padding: 16px;
+}
+.mono { font-family: var(--font-mono); font-size: 12px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.header-title { font-size: 16px; font-weight: 600; flex: 1; }
+.badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+.badge-mode { background: var(--info-muted); color: var(--info); }
+.badge-status-active { background: var(--success-muted); color: var(--success); }
+.badge-status-paused { background: var(--warning-muted); color: var(--warning); }
+.badge-status-completed { background: var(--accent-muted); color: var(--accent); }
+.cost-meter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+}
+@media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+/* Panels */
+.panel {
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.panel-body { padding: 8px; }
+
+/* Roles */
+.role-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+.role-item:hover { background: var(--surface-raised); }
+.role-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.role-name { font-family: var(--font-mono); font-size: 12px; flex: 1; }
+.role-status { font-size: 11px; color: var(--text-tertiary); }
+.role-cost { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* Swimlane */
+.swimlane { margin: 4px 0; }
+.swim-row { display: flex; align-items: center; gap: 8px; padding: 4px 8px; }
+.swim-label { font-family: var(--font-mono); font-size: 11px; width: 80px; color: var(--text-secondary); }
+.swim-bar-bg { flex: 1; height: 6px; background: var(--surface-raised); border-radius: 3px; overflow: hidden; }
+.swim-bar { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+
+/* Inbox */
+.inbox-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.inbox-item:last-child { border-bottom: none; }
+.inbox-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.inbox-severity {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.sev-critical { background: var(--danger-muted); color: var(--danger); }
+.sev-high { background: var(--warning-muted); color: var(--warning); }
+.sev-medium { background: var(--info-muted); color: var(--info); }
+.sev-low { background: var(--surface-raised); color: var(--text-tertiary); }
+.inbox-summary { font-size: 12px; color: var(--text-primary); margin-bottom: 6px; }
+.inbox-meta { font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px; }
+.inbox-actions { display: flex; gap: 6px; }
+.btn {
+  padding: 4px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+.btn:hover { border-color: var(--border-strong); }
+.btn-approve { background: var(--accent); color: var(--accent-on); border-color: var(--accent); }
+.btn-approve:hover { background: var(--accent-hover); }
+.btn-reject { border-color: var(--danger); color: var(--danger); }
+
+/* Decisions */
+.decision-item { padding: 6px 12px; border-bottom: 1px solid var(--border-subtle); }
+.decision-item:last-child { border-bottom: none; }
+.decision-time { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); }
+.decision-role { font-family: var(--font-mono); font-size: 11px; color: var(--accent); }
+.decision-summary { font-size: 12px; color: var(--text-primary); }
+
+/* Empty state */
+.empty { padding: 24px; text-align: center; color: var(--text-tertiary); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header" id="header">
+  <div class="header-title">Forge Dashboard</div>
+  <span class="badge badge-mode" id="mode-badge">STANDARD</span>
+  <span class="badge badge-status-active" id="status-badge">NO MISSION</span>
+  <span class="cost-meter num" id="cost-meter">$0.00</span>
+</div>
+
+<!-- Main Grid -->
+<div class="grid">
+  <!-- Left: Org Chart + Inbox -->
+  <div>
+    <div class="panel" style="margin-bottom: 16px;">
+      <div class="panel-header">Team</div>
+      <div class="panel-body" id="roles-panel">
+        <div class="empty">No active mission</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">CTO Inbox</div>
+      <div class="panel-body" id="inbox-panel">
+        <div class="empty">No pending items</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Swimlane + Decisions -->
+  <div>
+    <div class="panel" style="margin-bottom: 16px;">
+      <div class="panel-header">Mission Progress</div>
+      <div class="panel-body" id="swimlane-panel">
+        <div class="empty">No active mission</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Decision Ledger</div>
+      <div class="panel-body" id="decisions-panel">
+        <div class="empty">No decisions yet</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// VS Code webview API
+const vscode = typeof acquireVsCodeApi !== 'undefined' ? acquireVsCodeApi() : null;
+
+const statusColors = {
+  idle: '#6B7280', planning: '#4C8DFF', running: '#FF5C1F',
+  blocked: '#E0A93B', complete: '#2EBD6F', failed: '#E5484D',
+  success: '#2EBD6F',
+};
+
+function renderRoles(roles) {
+  const panel = document.getElementById('roles-panel');
+  if (!roles || roles.length === 0) {
+    panel.innerHTML = '<div class="empty">No active roles</div>';
+    return;
+  }
+  panel.innerHTML = roles.map(r => `
+    <div class="role-item">
+      <div class="role-dot" style="background: ${statusColors[r.status] || '#6B7280'}"></div>
+      <span class="role-name">@${r.roleId}</span>
+      <span class="role-status">${r.status || 'idle'}</span>
+      <span class="role-cost num">$${(r.costUsd || 0).toFixed(2)}</span>
+    </div>
+  `).join('');
+}
+
+function renderSwimlane(roles, slicesTotal, slicesCompleted) {
+  const panel = document.getElementById('swimlane-panel');
+  if (!roles || roles.length === 0) {
+    panel.innerHTML = '<div class="empty">No active slices</div>';
+    return;
+  }
+  const progress = slicesTotal > 0 ? Math.round((slicesCompleted / slicesTotal) * 100) : 0;
+  let html = `<div style="padding: 4px 8px; margin-bottom: 8px;">
+    <span class="mono">${slicesCompleted}/${slicesTotal} slices</span>
+    <span class="mono" style="float: right; color: var(--accent);">${progress}%</span>
+  </div>`;
+  html += roles.map(r => {
+    const pct = r.progress || (r.status === 'complete' ? 100 : r.status === 'running' ? 50 : 0);
+    const color = statusColors[r.status] || '#6B7280';
+    return `<div class="swim-row">
+      <span class="swim-label">@${r.roleId}</span>
+      <div class="swim-bar-bg"><div class="swim-bar" style="width: ${pct}%; background: ${color};"></div></div>
+    </div>`;
+  }).join('');
+  panel.innerHTML = html;
+}
+
+function renderInbox(items) {
+  const panel = document.getElementById('inbox-panel');
+  const pending = items.filter(i => i.status === 'pending');
+  if (pending.length === 0) {
+    panel.innerHTML = '<div class="empty">No pending items</div>';
+    return;
+  }
+  panel.innerHTML = pending.map(item => `
+    <div class="inbox-item">
+      <div class="inbox-header">
+        <span class="inbox-severity sev-${item.severity}">${item.severity.toUpperCase()}</span>
+        <span class="mono" style="font-size: 10px; color: var(--text-tertiary);">${item.type}</span>
+      </div>
+      <div class="inbox-summary">${item.summary}</div>
+      <div class="inbox-meta">${item.proposer} &middot; ${item.id}</div>
+      <div class="inbox-actions">
+        <button class="btn btn-approve" onclick="approve('${item.id}')">Approve</button>
+        <button class="btn btn-reject" onclick="reject('${item.id}')">Reject</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderDecisions(decisions) {
+  const panel = document.getElementById('decisions-panel');
+  if (!decisions || decisions.length === 0) {
+    panel.innerHTML = '<div class="empty">No decisions yet</div>';
+    return;
+  }
+  panel.innerHTML = decisions.slice(0, 20).map(d => `
+    <div class="decision-item">
+      <span class="decision-time">${d.timestamp}</span>
+      <span class="decision-role"> ${d.role}</span>
+      <div class="decision-summary">${d.summary}</div>
+    </div>
+  `).join('');
+}
+
+function updateDashboard(state) {
+  // Header
+  document.getElementById('mode-badge').textContent = (state.mode || 'standard').toUpperCase();
+  const statusBadge = document.getElementById('status-badge');
+  statusBadge.textContent = state.status ? state.status.toUpperCase() : 'NO MISSION';
+  statusBadge.className = 'badge badge-status-' + (state.status || 'active');
+  document.getElementById('cost-meter').textContent = '$' + (state.totalCostUsd || 0).toFixed(2);
+  document.querySelector('.header-title').textContent = state.missionName
+    ? `${state.project} / ${state.missionName}`
+    : 'Forge Dashboard';
+
+  // Panels
+  renderRoles(state.roles);
+  renderSwimlane(state.roles, state.slicesTotal, state.slicesCompleted);
+  renderInbox(state.inbox);
+  renderDecisions(state.decisions);
+}
+
+function approve(id) {
+  if (vscode) vscode.postMessage({ type: 'approve', id });
+}
+
+function reject(id) {
+  if (vscode) vscode.postMessage({ type: 'reject', id });
+}
+
+// Listen for state updates from VS Code extension
+window.addEventListener('message', (event) => {
+  const msg = event.data;
+  if (msg.type === 'state') {
+    updateDashboard(msg.data);
+  }
+});
+
+// Initial state (for testing outside VS Code)
+if (!vscode) {
+  updateDashboard({
+    project: 'Forge',
+    missionName: null,
+    mode: null,
+    status: null,
+    totalCostUsd: 0,
+    slicesTotal: 0,
+    slicesCompleted: 0,
+    roles: [],
+    inbox: [],
+    decisions: [],
+  });
+}
+</script>
+</body>
+</html>
