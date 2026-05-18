@@ -198,3 +198,4 @@ codeoss/node_modules/
 codeoss/.build/
 codeoss/extensions/*/out/
 codeoss/extensions/*/node_modules/
+codeoss/extensions/copilot/test/simulation/cache/
