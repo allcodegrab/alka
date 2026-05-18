@@ -4,6 +4,7 @@ import { missionCommand } from './commands/mission.js';
 import { orgChartCommand } from './commands/org-chart.js';
 import { inboxCommand } from './commands/inbox.js';
 import { knowledgeCommand } from './commands/knowledge.js';
+import { operationsCommand } from './commands/operations.js';
 
 const program = new Command();
 
@@ -13,5 +14,6 @@ program.addCommand(missionCommand());
 program.addCommand(orgChartCommand());
 program.addCommand(inboxCommand());
 program.addCommand(knowledgeCommand());
+program.addCommand(operationsCommand());
 
 program.parse();

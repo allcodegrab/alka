@@ -1,0 +1,17 @@
+monthlyTotalCapUsd: 200
+
+alertThresholdsPct:
+  - 50
+  - 80
+  - 100
+
+roles:
+  architect:
+    monthlyBudgetUsd: 80
+    model: claude-opus-4-7
+  impl-a:
+    monthlyBudgetUsd: 60
+    model: claude-sonnet-4-6
+  tests-verifier:
+    monthlyBudgetUsd: 40
+    model: claude-sonnet-4-6

@@ -1,0 +1,146 @@
+# =============================================================================
+# .npmignore — recommended for projects published to npm
+# =============================================================================
+# CRITICAL: If .npmignore exists, npm IGNORES .gitignore entirely.
+# An incomplete .npmignore is more dangerous than no .npmignore at all.
+#
+# Alternative: use the "files" field in package.json to ALLOW-LIST what ships.
+# Allow-listing is safer than deny-listing (this file). Recommended for new projects.
+#
+# This file is a deny-list compatible with existing projects.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Source maps — this caused Anthropic's Claude Code leak (March 31, 2026)
+# -----------------------------------------------------------------------------
+*.map
+*.js.map
+*.css.map
+*.sourcemap
+**/*.map
+
+# -----------------------------------------------------------------------------
+# Claude Code — entire .claude/ should NEVER ship in npm packages
+# -----------------------------------------------------------------------------
+.claude/
+.claudeignore
+.claudeignore.cache
+
+# -----------------------------------------------------------------------------
+# Environment files
+# -----------------------------------------------------------------------------
+.env
+.env.*
+*.env
+!.env.example
+!.env.template
+
+# -----------------------------------------------------------------------------
+# Credentials
+# -----------------------------------------------------------------------------
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+.aws/
+.gcp/
+.azure/
+
+# -----------------------------------------------------------------------------
+# Tests — generally not needed in published package
+# -----------------------------------------------------------------------------
+tests/
+test/
+__tests__/
+spec/
+*.test.js
+*.test.ts
+*.test.mjs
+*.test.cjs
+*.spec.js
+*.spec.ts
+*.spec.mjs
+*.spec.cjs
+test/
+testing/
+
+# -----------------------------------------------------------------------------
+# Coverage
+# -----------------------------------------------------------------------------
+coverage/
+.nyc_output/
+
+# -----------------------------------------------------------------------------
+# Dev tooling configs
+# -----------------------------------------------------------------------------
+.eslintrc*
+.prettierrc*
+.editorconfig
+.vscode/
+.idea/
+*.iml
+.babelrc*
+.swcrc
+tsconfig.test.json
+jest.config.*
+vitest.config.*
+playwright.config.*
+
+# -----------------------------------------------------------------------------
+# CI configs (rarely needed in published package)
+# -----------------------------------------------------------------------------
+.github/
+.gitlab-ci.yml
+.circleci/
+azure-pipelines.yml
+.travis.yml
+.jenkins/
+
+# -----------------------------------------------------------------------------
+# Documentation source (keep README.md, exclude raw source / examples)
+# -----------------------------------------------------------------------------
+docs/
+examples/
+example/
+demo/
+demos/
+
+# -----------------------------------------------------------------------------
+# Build artifacts and intermediates
+# -----------------------------------------------------------------------------
+.cache/
+.next/
+.nuxt/
+.turbo/
+.parcel-cache/
+.swc/
+.tsbuildinfo
+*.tsbuildinfo
+
+# -----------------------------------------------------------------------------
+# Editor / OS
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.bak
+*.orig
+*.swp
+*~
+
+# -----------------------------------------------------------------------------
+# Logs
+# -----------------------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+
+# -----------------------------------------------------------------------------
+# Source files (only if you ship pre-built dist/)
+# -----------------------------------------------------------------------------
+# Uncomment these if your package only ships compiled output:
+# src/
+# *.ts
+# !*.d.ts
