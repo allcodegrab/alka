@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/public dist/public",
     "start": "node dist/server.js",
     "dev": "node --loader ts-node/esm src/server.ts",
     "test": "vitest run",
