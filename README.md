@@ -54,20 +54,46 @@ pnpm format-check  # Prettier formatting check
 ### 3. Set Up the CLI
 
 ```bash
-# Option A: Create a shell alias
+# Add this alias to your shell (paste into terminal):
 alias forge="node $(pwd)/packages/forge-cli/dist/main.js"
 
-# Option B: Link globally
-cd packages/forge-cli && pnpm link --global && cd ../..
+# Or run commands directly without the alias:
+node packages/forge-cli/dist/main.js --help
 
-# Verify
-forge --version
-forge --help
+# To make the alias permanent, add to ~/.zshrc or ~/.bashrc:
+echo 'alias forge="node /path/to/alka/packages/forge-cli/dist/main.js"' >> ~/.zshrc
 ```
+
+### 4. Launch the Dashboard UI (recommended)
+
+```bash
+# Start the visual dashboard in your browser:
+node packages/forge-cli/dist/main.js ui
+
+# Or with the alias:
+forge ui
+
+# Custom port:
+forge ui --port 8080
+```
+
+This opens **http://localhost:3141** — a full interactive dashboard where you can:
+- Start/close missions with a button click
+- Approve/reject CTO inbox items visually
+- Search the knowledge graph
+- View team status with colored dots
+- Monitor costs and progress bars
+- Sync the org chart
+- Run dream cycles
+
+No CLI commands needed — everything is clickable.
 
 ---
 
 ## CLI Reference
+
+> **Note:** All `forge` commands below assume you've set up the alias (see step 3 above).
+> Without the alias, prefix every command with: `node packages/forge-cli/dist/main.js`
 
 ### Team Management
 
@@ -167,9 +193,36 @@ forge ops healing-log
 
 ---
 
-## Running the Editor
+## Dashboard UI
 
-The Forge editor is a Code-OSS fork with the Anvil Dark theme applied.
+The primary way to use Forge is through the web dashboard:
+
+```bash
+# Build first (one time after clone or code changes):
+pnpm build
+
+# Launch the dashboard:
+node packages/forge-cli/dist/main.js ui
+```
+
+Opens **http://localhost:3141** with 6 interactive tabs:
+
+| Tab | Features |
+|---|---|
+| **Dashboard** | Team status dots, mission swimlane, CTO inbox mini-view, recent decisions |
+| **Missions** | **"+ New Mission"** button with modal (name, mode, brief), mission list with Close buttons |
+| **Team** | 15 roles by tier, **"Sync"** and **"Verify"** buttons for org chart |
+| **Inbox** | Severity badges, **"Approve"** (green) and **"Reject"** (red) buttons per item |
+| **Knowledge** | Stats panel, **"Rebuild Index"** button, search bar with scored results |
+| **Operations** | Schedule, payroll bars, **"Run Dream Cycle"** button, healing log |
+
+Live updates via Server-Sent Events — the dashboard refreshes automatically when missions or inbox items change.
+
+---
+
+## Running the Editor (Optional)
+
+The Forge editor is a Code-OSS fork with the Anvil Dark theme. This is optional — the Dashboard UI above covers all functionality.
 
 ```bash
 cd codeoss
@@ -177,6 +230,8 @@ npm install          # First time only (~5 min)
 npm run compile      # Compile (~2 min)
 ./scripts/code.sh    # Launch on macOS
 ```
+
+> **Note:** The editor requires Node.js 22+ (see `codeoss/.nvmrc`). If you're on Node 20, use `nvm install 22` first.
 
 The editor opens as **"Forge"** with:
 - Anvil Dark theme (deep neutral surfaces, Forge Amber accent)
@@ -223,6 +278,7 @@ alka/
 │   ├── llm-router/              # Multi-LLM routing (Anthropic + Gemini)
 │   ├── anvil/                   # Design tokens (Dark/Light/High-Contrast)
 │   ├── dashboard/               # Dashboard data layer + webview HTML
+│   ├── forge-server/            # Fastify HTTP server (REST API + SSE)
 │   └── forge-cli/               # The `forge` command
 ├── codeoss/                     # Code-OSS v1.121.0 fork (Forge-branded)
 ├── .forge/                      # Project configuration
