@@ -72,7 +72,8 @@ describe('runDreamCycle', () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
-    const dateStr = new Date().toISOString().slice(0, 10);
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     const dreamPath = join(tmpDir, '.claude', 'dreams', `${dateStr}.md`);
     const content = await readFile(dreamPath, 'utf-8');
     expect(content).toContain('# Dream Cycle');
@@ -83,7 +84,8 @@ describe('runDreamCycle', () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
-    const dateStr = new Date().toISOString().slice(0, 10);
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     const dreamPath = join(tmpDir, '.claude', 'dreams', `${dateStr}.md`);
     const content = await readFile(dreamPath, 'utf-8');
     expect(content).toMatch(/# Dream Cycle — \d{4}-\d{2}-\d{2}/);

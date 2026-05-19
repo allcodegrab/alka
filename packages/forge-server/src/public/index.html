@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forge Dashboard</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+<style>
+:root{--surface-canvas:#0A0B0D;--surface-base:#0E1014;--surface-raised:#14171C;--surface-overlay:#1A1E25;--surface-sunken:#07080A;--border-subtle:#1A1E25;--border-default:#262B33;--border-strong:#3A4049;--text-primary:#E8EAED;--text-secondary:#9CA3AF;--text-tertiary:#6B7280;--text-disabled:#4A5057;--accent:#FF5C1F;--accent-hover:#FF7A45;--accent-muted:rgba(255,92,31,0.12);--accent-on:#0A0B0D;--success:#2EBD6F;--success-muted:rgba(46,189,111,0.12);--warning:#E0A93B;--warning-muted:rgba(224,169,59,0.12);--danger:#E5484D;--danger-muted:rgba(229,72,77,0.12);--info:#4C8DFF;--info-muted:rgba(76,141,255,0.12);--font-sans:'Satoshi',system-ui,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+body{font-family:var(--font-sans);font-size:13px;line-height:1.38;color:var(--text-primary);background:var(--surface-canvas);-webkit-font-smoothing:antialiased;display:grid;grid-template-rows:44px 1fr 24px;grid-template-columns:56px 1fr;overflow:hidden}
+.mono{font-family:var(--font-mono);font-size:12px}.num{font-variant-numeric:tabular-nums}
+header{grid-column:1/-1;background:var(--surface-base);border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;padding:0 16px;gap:12px}
+.logo{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-0.02em}
+.sep{width:1px;height:20px;background:var(--border-default)}
+.h-project{font-size:13px;color:var(--text-secondary);flex:1}
+.badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;font-family:var(--font-mono);letter-spacing:0.04em}
+.bg-active{background:var(--success-muted);color:var(--success)}.bg-idle{background:var(--surface-raised);color:var(--text-tertiary)}.bg-24h{background:var(--accent-muted);color:var(--accent)}
+.h-cost{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.h-dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+nav{background:var(--surface-sunken);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:4px}
+.nav-btn{width:40px;height:40px;border:none;background:transparent;color:var(--text-tertiary);font-size:16px;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.nav-btn:hover{background:var(--surface-raised);color:var(--text-primary)}.nav-btn.active{background:var(--accent-muted);color:var(--accent)}
+main{overflow-y:auto;padding:16px}
+.tab{display:none}.tab.on{display:block}
+footer{grid-column:1/-1;background:var(--surface-sunken);border-top:1px solid var(--border-subtle);display:flex;align-items:center;padding:0 12px;gap:12px;font-size:11px;color:var(--text-tertiary)}
+.f-dot{width:6px;height:6px;border-radius:50%}.f-on{background:var(--success)}.f-off{background:var(--danger)}
+.card{background:var(--surface-base);border:1px solid var(--border-subtle);border-radius:6px;margin-bottom:12px;overflow:hidden}
+.card-h{padding:8px 12px;border-bottom:1px solid var(--border-subtle);font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;justify-content:space-between}
+.card-b{padding:8px 12px}.empty{padding:24px;text-align:center;color:var(--text-tertiary);font-size:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.g3{display:grid;grid-template-columns:280px 1fr 1fr;gap:12px}
+@media(max-width:1000px){.g2,.g3{grid-template-columns:1fr}}
+.ri{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:4px}.ri:hover{background:var(--surface-raised)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rn{font-family:var(--font-mono);font-size:12px;flex:1}.rm{font-size:11px;color:var(--text-tertiary)}
+.btn{padding:6px 14px;border:1px solid var(--border-default);border-radius:4px;background:var(--surface-raised);color:var(--text-primary);font-size:12px;font-family:var(--font-sans);cursor:pointer;transition:all .12s}
+.btn:hover{border-color:var(--border-strong);background:var(--surface-overlay)}.btn-p{background:var(--accent);color:var(--accent-on);border-color:var(--accent);font-weight:600}.btn-p:hover{background:var(--accent-hover)}
+.btn-d{border-color:var(--danger);color:var(--danger)}.btn-d:hover{background:var(--danger-muted)}.btn-s{padding:3px 10px;font-size:11px}
+.sev{font-family:var(--font-mono);font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px}
+.sc{background:var(--danger-muted);color:var(--danger)}.sh{background:var(--warning-muted);color:var(--warning)}.sm{background:var(--info-muted);color:var(--info)}.sl{background:var(--surface-raised);color:var(--text-tertiary)}
+.pb{height:6px;background:var(--surface-raised);border-radius:3px;overflow:hidden;flex:1}.pf{height:100%;border-radius:3px;transition:width .3s}
+.sw{display:flex;align-items:center;gap:8px;padding:3px 0}.swl{font-family:var(--font-mono);font-size:11px;width:100px;color:var(--text-secondary);text-align:right}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center}.mo.open{display:flex}
+.md{background:var(--surface-base);border:1px solid var(--border-default);border-radius:8px;padding:24px;width:480px}
+.md h3{font-size:16px;font-weight:600;margin-bottom:16px}.md label{display:block;font-size:12px;color:var(--text-secondary);margin:12px 0 4px}
+.md input,.md textarea,.md select{width:100%;padding:8px 10px;background:var(--surface-raised);border:1px solid var(--border-default);border-radius:4px;color:var(--text-primary);font-family:var(--font-sans);font-size:13px}
+.md input:focus,.md textarea:focus,.md select:focus{outline:none;border-color:var(--accent)}.md textarea{resize:vertical;min-height:80px}
+.md-a{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.sb{display:flex;gap:8px;margin-bottom:12px}.sb input{flex:1}
+.sr{padding:8px 12px;border-bottom:1px solid var(--border-subtle)}.sr:hover{background:var(--surface-raised)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sx{background:var(--surface-raised);border-radius:4px;padding:12px;text-align:center}
+.sv{font-family:var(--font-mono);font-size:20px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+.sn{font-size:10px;color:var(--text-tertiary);text-transform:uppercase;margin-top:4px}
+.ii{padding:10px 12px;border-bottom:1px solid var(--border-subtle)}.ii:last-child{border-bottom:none}
+.ir{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.tl{font-size:10px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.06em;padding:4px 8px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">FORGE</div><div class="sep"></div>
+<div class="h-project" id="hp">Loading...</div>
+<div class="badge bg-idle" id="hs">NO MISSION</div>
+<div class="badge bg-idle" id="hm" style="display:none"></div>
+<div class="h-cost num" id="hc">$0.00</div>
+<div class="h-dot" id="hd"></div>
+</header>
+<nav>
+<button class="nav-btn active" data-t="dash" title="Dashboard">&#9632;</button>
+<button class="nav-btn" data-t="miss" title="Missions">&#9654;</button>
+<button class="nav-btn" data-t="team" title="Team">&#9679;</button>
+<button class="nav-btn" data-t="inbox" title="Inbox">&#9993;</button>
+<button class="nav-btn" data-t="know" title="Knowledge">&#8984;</button>
+<button class="nav-btn" data-t="ops" title="Operations">&#9881;</button>
+</nav>
+<main>
+<div class="tab on" id="t-dash"><div class="g3"><div><div class="card"><div class="card-h">Team</div><div class="card-b" id="dr"><div class="empty">No active mission</div></div></div></div><div><div class="card"><div class="card-h">Mission Progress</div><div class="card-b" id="ds"><div class="empty">No active slices</div></div></div><div class="card"><div class="card-h">Recent Decisions</div><div class="card-b" id="dd"><div class="empty">No decisions yet</div></div></div></div><div><div class="card"><div class="card-h">CTO Inbox</div><div class="card-b" id="di"><div class="empty">No pending items</div></div></div></div></div></div>
+<div class="tab" id="t-miss"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:16px;font-weight:600">Missions</h2><button class="btn btn-p" onclick="openM()">+ New Mission</button></div><div class="card"><div class="card-b" id="ml"><div class="empty">No missions yet</div></div></div></div>
+<div class="tab" id="t-team"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:16px;font-weight:600">Engineering Team</h2><div style="display:flex;gap:8px"><button class="btn" onclick="syncT()">Sync</button><button class="btn" onclick="verifyT()">Verify</button></div></div><div id="tr"></div><div id="tm" style="margin-top:12px;font-size:12px;color:var(--text-secondary)"></div></div>
+<div class="tab" id="t-inbox"><h2 style="font-size:16px;font-weight:600;margin-bottom:16px">CTO Inbox</h2><div class="card"><div class="card-h">Pending</div><div class="card-b" id="ip"><div class="empty">No pending items</div></div></div><div class="card" style="margin-top:16px"><div class="card-h">Decided</div><div class="card-b" id="id2"><div class="empty">No decided items</div></div></div></div>
+<div class="tab" id="t-know"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:16px;font-weight:600">Knowledge Graph</h2><button class="btn btn-p" onclick="rebuildK()">Rebuild Index</button></div><div class="sg" id="ks" style="margin-bottom:16px"><div class="sx"><div class="sv">-</div><div class="sn">Nodes</div></div><div class="sx"><div class="sv">-</div><div class="sn">Edges</div></div><div class="sx"><div class="sv">-</div><div class="sn">Documents</div></div><div class="sx"><div class="sv">-</div><div class="sn">Terms</div></div></div><div class="card"><div class="card-h">Search</div><div class="card-b"><div class="sb"><input id="kq" placeholder="Search the codebase..." onkeydown="if(event.key==='Enter')searchK()"><button class="btn btn-p btn-s" onclick="searchK()">Search</button></div><div id="kr"></div></div></div></div>
+<div class="tab" id="t-ops"><h2 style="font-size:16px;font-weight:600;margin-bottom:16px">Operations</h2><div class="g2"><div class="card"><div class="card-h">Schedule</div><div class="card-b" id="os"><div class="empty">Loading...</div></div></div><div class="card"><div class="card-h"><span>Payroll</span><button class="btn btn-s" onclick="genPay()">Report</button></div><div class="card-b" id="op"><div class="empty">Loading...</div></div></div><div class="card"><div class="card-h"><span>Dream Mode</span><button class="btn btn-s" onclick="runDr()">Run Now</button></div><div class="card-b" id="od"><div class="empty">No recent cycles</div></div></div><div class="card"><div class="card-h">Self-Healing Log</div><div class="card-b" id="oh"><div class="empty">No events</div></div></div></div></div>
+</main>
+<footer><div class="f-dot f-off" id="fd"></div><span id="fs">Connecting...</span><div style="flex:1"></div><span class="mono" id="ft"></span></footer>
+<div class="mo" id="mm"><div class="md"><h3>New Mission</h3><label>Name</label><input id="mn" placeholder="e.g. add-user-endpoint"><label>Mode</label><select id="mo2"><option value="standard">Standard</option><option value="24h">24-Hour Sprint</option></select><label>Brief</label><textarea id="mb" placeholder="Describe what this mission should accomplish..."></textarea><div class="md-a"><button class="btn" onclick="closeM('mm')">Cancel</button><button class="btn btn-p" onclick="startM()">Start Mission</button></div></div></div>
+<div class="mo" id="mr"><div class="md"><h3>Reject Item</h3><label>Reason</label><textarea id="rr" placeholder="Why are you rejecting this?"></textarea><input type="hidden" id="ri"><div class="md-a"><button class="btn" onclick="closeM('mr')">Cancel</button><button class="btn btn-d" onclick="doRej()">Reject</button></div></div></div>
+<script>
+const SC={idle:'#6B7280',planning:'#4C8DFF',running:'#FF5C1F',blocked:'#E0A93B',complete:'#2EBD6F',failed:'#E5484D',success:'#2EBD6F'};
+let S=null;
+document.querySelectorAll('.nav-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.getElementById('t-'+b.dataset.t).classList.add('on');const t=b.dataset.t;if(t==='team')loadT();if(t==='miss')loadMs();if(t==='inbox')loadI();if(t==='know')loadKS();if(t==='ops')loadO()})});
+async function F(p,o){try{const r=await fetch(p,o);return await r.json()}catch(e){return null}}
+async function loadS(){const s=await F('/api/state');if(s){S=s;render(s)}}
+function render(s){
+document.getElementById('hp').textContent=s.missionName?s.project+' / '+s.missionName:s.project||'Forge';
+const se=document.getElementById('hs');se.textContent=s.status?s.status.toUpperCase():'NO MISSION';se.className='badge '+(s.status==='active'?'bg-active':'bg-idle');
+const me=document.getElementById('hm');if(s.mode){me.style.display='';me.textContent=s.mode.toUpperCase();me.className='badge '+(s.mode==='24h'?'bg-24h':'bg-idle')}else me.style.display='none';
+document.getElementById('hc').textContent='$'+(s.totalCostUsd||0).toFixed(2);
+const re=document.getElementById('dr');
+if(!s.roles||!s.roles.length)re.innerHTML='<div class="empty">No active roles</div>';
+else re.innerHTML=s.roles.map(r=>`<div class="ri"><div class="dot" style="background:${SC[r.status]||'#6B7280'}"></div><span class="rn">@${r.roleId}</span><span class="rm">${r.status||'idle'}</span><span class="rm num">$${(r.costUsd||0).toFixed(2)}</span></div>`).join('');
+const sw=document.getElementById('ds');
+if(!s.roles||!s.roles.length)sw.innerHTML='<div class="empty">No active slices</div>';
+else{const p=s.slicesTotal>0?Math.round(s.slicesCompleted/s.slicesTotal*100):0;sw.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="mono">${s.slicesCompleted}/${s.slicesTotal} slices</span><span class="mono" style="color:var(--accent)">${p}%</span></div>`+s.roles.map(r=>{const v=r.progress||(r.status==='complete'?100:r.status==='running'?50:0);return`<div class="sw"><span class="swl">@${r.roleId}</span><div class="pb"><div class="pf" style="width:${v}%;background:${SC[r.status]||'#6B7280'}"></div></div></div>`}).join('')}
+const ie=document.getElementById('di');const pn=(s.inbox||[]).filter(i=>i.status==='pending');
+if(!pn.length)ie.innerHTML='<div class="empty">No pending items</div>';
+else ie.innerHTML=pn.slice(0,3).map(i=>`<div class="ii"><div class="ir"><span class="sev ${{critical:'sc',high:'sh',medium:'sm',low:'sl'}[i.severity]||'sl'}">${(i.severity||'').toUpperCase()}</span></div><div style="font-size:12px;margin-bottom:6px">${i.summary||''}</div><div style="display:flex;gap:6px"><button class="btn btn-p btn-s" onclick="doApp('${i.id}')">Approve</button><button class="btn btn-d btn-s" onclick="openR('${i.id}')">Reject</button></div></div>`).join('');
+const de=document.getElementById('dd');
+if(!s.decisions||!s.decisions.length)de.innerHTML='<div class="empty">No decisions yet</div>';
+else de.innerHTML=s.decisions.slice(0,5).map(d=>`<div style="padding:4px 0;border-bottom:1px solid var(--border-subtle)"><span class="mono" style="font-size:10px;color:var(--text-tertiary)">${d.timestamp||''}</span> <span class="mono" style="color:var(--accent)">${d.role||''}</span><div style="font-size:12px">${d.summary||''}</div></div>`).join('')}
+async function loadMs(){const d=await F('/api/missions');const e=document.getElementById('ml');if(!d||!d.length){e.innerHTML='<div class="empty">No missions yet</div>';return}e.innerHTML=d.map(m=>`<div style="padding:12px;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:600">${m.name||m.id}</div><div class="mono" style="font-size:11px;color:var(--text-tertiary)">${m.id}</div></div><div style="display:flex;gap:8px;align-items:center"><span class="badge ${m.status==='active'?'bg-active':'bg-idle'}">${(m.status||'').toUpperCase()}</span>${m.status==='active'?`<button class="btn btn-s" onclick="closeMs('${m.id}')">Close</button>`:''}</div></div>`).join('')}
+function openM(){document.getElementById('mm').classList.add('open');document.getElementById('mn').focus()}
+function closeM(id){document.getElementById(id).classList.remove('open')}
+async function startM(){const n=document.getElementById('mn').value.trim();if(!n){alert('Enter a name');return}await F('/api/missions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,mode:document.getElementById('mo2').value,brief:document.getElementById('mb').value.trim()||'Started from dashboard.'})});closeM('mm');document.getElementById('mn').value='';document.getElementById('mb').value='';loadMs();loadS()}
+async function closeMs(id){await F(`/api/missions/${id}/close`,{method:'POST'});loadMs();loadS()}
+async function loadT(){const d=await F('/api/org-chart');const e=document.getElementById('tr');if(!d||!d.roles){e.innerHTML='<div class="empty">Could not load</div>';return}const t={};d.roles.forEach(r=>{if(!t[r.tier])t[r.tier]=[];t[r.tier].push(r)});e.innerHTML=['leadership','planning','build','verify','release'].filter(k=>t[k]).map(k=>`<div style="margin-bottom:16px"><div class="tl">${k}</div><div class="card"><div class="card-b">${t[k].map(r=>`<div class="ri"><div class="dot" style="background:#6B7280"></div><span class="rn">@${r.id}</span><span class="rm mono">${r.model}</span><span class="rm">${r.tools?.length||0} tools</span></div>`).join('')}</div></div></div>`).join('')}
+async function syncT(){const e=document.getElementById('tm');e.textContent='Syncing...';const r=await F('/api/org-chart/sync',{method:'POST'});e.textContent=r?.files?`Synced ${r.files.length} files.`:'Failed.';loadT()}
+async function verifyT(){const e=document.getElementById('tm');e.textContent='Verifying...';const r=await F('/api/org-chart/drift');if(!r){e.textContent='Failed.';return}e.textContent=r.inSync?'In sync.':(`Drift: ${(r.missing||[]).length} missing, ${(r.extra||[]).length} extra, ${(r.modified||[]).length} modified.`);e.style.color=r.inSync?'var(--success)':'var(--warning)'}
+async function loadI(){const d=await F('/api/inbox');if(!d)return;const p=d.filter(i=>i.status==='pending'),dc=d.filter(i=>i.status!=='pending');document.getElementById('ip').innerHTML=!p.length?'<div class="empty">No pending</div>':p.map(i=>`<div class="ii"><div class="ir"><span class="sev ${{critical:'sc',high:'sh',medium:'sm',low:'sl'}[i.severity]||'sl'}">${(i.severity||'').toUpperCase()}</span><span class="mono" style="font-size:10px">${i.type||''}</span></div><div style="font-size:12px;margin-bottom:6px">${i.summary||''}</div><div style="font-size:11px;color:var(--text-tertiary);margin-bottom:8px">${i.proposer||''}</div><div style="display:flex;gap:6px"><button class="btn btn-p btn-s" onclick="doApp('${i.id}')">Approve</button><button class="btn btn-d btn-s" onclick="openR('${i.id}')">Reject</button></div></div>`).join('');document.getElementById('id2').innerHTML=!dc.length?'<div class="empty">No decided</div>':dc.slice(0,10).map(i=>`<div class="ii" style="opacity:.6"><div class="ir"><span class="sev ${{critical:'sc',high:'sh',medium:'sm',low:'sl'}[i.severity]||'sl'}">${(i.severity||'').toUpperCase()}</span><span class="badge bg-idle">${(i.status||'').toUpperCase()}</span></div><div style="font-size:12px">${i.summary||''}</div></div>`).join('')}
+async function doApp(id){await F(`/api/inbox/${id}/approve`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason:'Approved from dashboard'})});loadI();loadS()}
+function openR(id){document.getElementById('ri').value=id;document.getElementById('mr').classList.add('open');document.getElementById('rr').focus()}
+async function doRej(){const id=document.getElementById('ri').value,rs=document.getElementById('rr').value.trim()||'Rejected from dashboard';await F(`/api/inbox/${id}/reject`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason:rs})});closeM('mr');document.getElementById('rr').value='';loadI();loadS()}
+async function loadKS(){const d=await F('/api/knowledge/stats');if(!d)return;const b=document.getElementById('ks').children;b[0].querySelector('.sv').textContent=d.nodes??'-';b[1].querySelector('.sv').textContent=d.edges??'-';b[2].querySelector('.sv').textContent=d.documents??'-';b[3].querySelector('.sv').textContent=d.vocabulary??'-'}
+async function rebuildK(){document.getElementById('ks').querySelectorAll('.sv').forEach(v=>v.textContent='...');await F('/api/knowledge/build',{method:'POST'});loadKS()}
+async function searchK(){const q=document.getElementById('kq').value.trim();if(!q)return;const e=document.getElementById('kr');e.innerHTML='<div class="empty">Searching...</div>';const d=await F('/api/knowledge/query?q='+encodeURIComponent(q));if(!d?.chunks?.length){e.innerHTML='<div class="empty">No results</div>';return}e.innerHTML=d.chunks.map(c=>`<div class="sr"><div style="display:flex;justify-content:space-between"><span class="mono" style="font-size:11px;color:var(--text-secondary)">${c.source||c.id}</span><span class="mono" style="font-size:10px;color:var(--accent)">${(c.score||0).toFixed(3)}</span></div><div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(c.content||'').slice(0,120).replace(/</g,'&lt;')}</div></div>`).join('')}
+async function loadO(){const s=await F('/api/schedule');document.getElementById('os').innerHTML=s?`<div style="font-size:12px"><div>Business hours: <strong style="color:${s.withinHours?'var(--success)':'var(--warning)'};">${s.withinHours?'Active':'Off-hours'}</strong></div></div>`:'<div class="empty">Not configured</div>';const p=await F('/api/payroll');document.getElementById('op').innerHTML=p?.roles?p.roles.slice(0,5).map(r=>`<div class="ri"><span class="rn">@${r.roleId}</span><div class="pb" style="width:80px"><div class="pf" style="width:${r.pct||0}%;background:${(r.pct||0)>80?'var(--danger)':'var(--accent)'}"></div></div><span class="rm num">$${(r.spent||0).toFixed(0)}/$${(r.budget||0).toFixed(0)}</span></div>`).join(''):'<div class="empty">No data</div>'}
+async function runDr(){document.getElementById('od').innerHTML='<div class="empty">Running...</div>';const r=await F('/api/dream',{method:'POST'});document.getElementById('od').innerHTML=r?`<div style="font-size:12px;color:var(--success)">Done in ${r.durationMs||0}ms</div>`:'<div class="empty">Failed</div>'}
+async function genPay(){await F('/api/payroll/report',{method:'POST'});loadO()}
+function connectSSE(){const es=new EventSource('/api/events');es.onopen=()=>{document.getElementById('fd').className='f-dot f-on';document.getElementById('fs').textContent='Connected'};es.onmessage=e=>{try{const s=JSON.parse(e.data);S=s;render(s)}catch{}};es.onerror=()=>{document.getElementById('fd').className='f-dot f-off';document.getElementById('fs').textContent='Reconnecting...'}}
+loadS();connectSSE();setInterval(()=>{document.getElementById('ft').textContent=new Date().toLocaleTimeString()},1000);
+</script>
+</body>
+</html>
